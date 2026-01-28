@@ -1,0 +1,20 @@
+{
+  "name": "sudoecool",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --parallel --filter '*' dev",
+    "dev:web": "bun run --filter @sudoecool/web dev",
+    "dev:api": "bun run --filter @sudoecool/api dev",
+    "build": "bun run --filter @sudoecool/shared build && bun run --filter @sudoecool/web build && bun run --filter @app/api build",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.0"
+  }
+}

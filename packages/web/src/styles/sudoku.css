@@ -1,0 +1,103 @@
+:root {
+    --cell-border-color: #ccc;
+    --cell-border-thickness: 1px;
+    --region-border-color: var(--primary);
+    --region-border-thickness: 3px;
+
+    --cell-size-mobile: 40px;
+    --cell-size-tablet: 40px;
+    --cell-size-desktop: 48px;
+
+    --cell-border-color: var(--color-border);
+
+    --cell-given-background: oklch(from var(--primary) calc(l + 1) calc(c - 0.1) h);
+    --cell-selected-background: var(--primary);
+
+    --cell-same-background: oklch(from var(--cell-selected-background) calc(l + 0.05) calc(c + 0.7) h);
+
+    --cell-highlight-background: oklch(from var(--color-primary) l c h / 7%);
+
+    --cell-error-foreground: var(--destructive);
+    --cell-error-background: oklch(from var(--cell-error-foreground) l c h /50%);
+
+    --sudoku-region-spacing: 8px;
+}
+
+.sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-collapse: collapse;
+    border: var(--region-border-thickness) solid var(--region-border-color);
+}
+
+.sudoku-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--cell-border-thickness) solid var(--cell-border-color);
+    cursor: pointer;
+    position: relative;
+    background-color: var(--color-background);
+    box-sizing: border-box;
+}
+
+/* Thicker right border for 3x3 regions */
+.sudoku-cell:nth-child(3n):not(:nth-child(9n)) {
+    border-right: var(--region-border-thickness) solid var(--region-border-color);
+}
+
+/* Thicker bottom border for 3x3 regions */
+.sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+.sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
+    border-bottom: var(--region-border-thickness) solid var(--region-border-color);
+}
+
+/* Cell States */
+.sudoku-cell--given {
+    background-color: var(--cell-given-background);
+    font-weight: 700;
+    cursor: default;
+}
+
+.sudoku-cell--related::before,
+.sudoku-cell--error::before {
+    z-index: 0;
+    content: " ";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--cell-highlight-background);
+}
+
+.sudoku-cell--same {
+    background-color: var(--cell-same-background);
+}
+
+.sudoku-cell--selected {
+    background-color: var(--cell-selected-background);
+}
+
+
+
+.sudoku-cell--filled:not(.sudoku-cell--given) {
+    color: var(--cell-filled-foreground);
+    font-weight: 800;
+}
+
+.sudoku-cell--error::after {
+    position: absolute;
+    content: ' ';
+    height: 4px;
+    border-radius: 4px;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    background-color: var(--color-destructive);
+}
+
+.sudoku-cell--error::before {}

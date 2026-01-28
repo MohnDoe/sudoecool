@@ -1,0 +1,6 @@
+[build]
+target = "bun"
+[define]
+process.env.NODE_ENV = "\"development\""
+[serve.static]
+plugins = ["bun-plugin-tailwind"]

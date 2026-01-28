@@ -1,0 +1,54 @@
+:root {
+    --border-color: var(--foreground);
+    --border-radius: 8px;
+    --border-radius-xs: 4px;
+
+    --border-width: 4px;
+    --border-width-xs: 2px;
+
+    --elevation: 8px;
+    --elevation-xs: 4px;
+
+    --hover-y-offset: 4px;
+    --hover-y-offset-xs: 2px;
+
+    --pressed-y-offset: var(--elevation);
+    --pressed-y-offset-xs: var(--elevation-xs);
+
+}
+
+.elevated {
+    border-radius: var(--border-radius);
+    transition: 120ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.elevated {
+    box-shadow: 0 var(--elevation) 0 var(--border-width) var(--border-color), 0 0 0 var(--border-width) var(--border-color);
+}
+
+.elevated:hover {
+    transform: translateY(var(--hover-y-offset));
+    box-shadow: 0 calc(var(--elevation) - var(--hover-y-offset)) 0 var(--border-width) var(--border-color), 0 0 0 var(--border-width) var(--border-color);
+}
+
+.elevated:active {
+    transform: translateY(var(--pressed-y-offset));
+    box-shadow: 0 calc(var(--elevation) - var(--pressed-y-offset)) 0 var(--border-width) var(--border-color), 0 0 0 var(--border-width) var(--border-color);
+}
+
+
+.elevated--xs {
+    border-radius: var(--border-radius-xs);
+    box-shadow: 0 var(--elevation-xs) 0 var(--border-width-xs) var(--border-color), 0 0 0 var(--border-width-xs) var(--border-color);
+}
+
+.elevated--xs:hover {
+    transform: translateY(var(--hover-y-offset-xs));
+    box-shadow: 0 calc(var(--elevation-xs) - var(--hover-y-offset-xs)) 0 var(--border-width-xs) var(--border-color), 0 0 0 var(--border-width-xs) var(--border-color);
+}
+
+.elevated--xs:active {
+    transform: translateY(var(--pressed-y-offset-xs));
+    box-shadow: 0 calc(var(--elevation-xs) - var(--pressed-y-offset-xs)) 0 var(--border-width-xs) var(--border-color), 0 0 0 var(--border-width-xs) var(--border-color);
+}
