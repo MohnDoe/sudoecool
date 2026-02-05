@@ -5,7 +5,7 @@ import GameInfos from "./GameInfos"
 import { useGameStore } from "@/stores/gameStore";
 
 export default function Sudoku() {
-  const { grid, selectedIndex, notesMode, toggleNote, setCellValue } = useGameStore()
+  const { grid, selectedIndex, clearCell, notesMode, toggleNote, toggleNotesMode, setCellValue } = useGameStore()
 
   const handleNumInsertion = useCallback(
     (num: number) => {
@@ -20,13 +20,26 @@ export default function Sudoku() {
       }
     }, [selectedIndex, toggleNote, setCellValue, grid, notesMode]
   )
+
+  const onRemoveButtonPress = useCallback(
+    () => {
+      if (selectedIndex !== null) {
+        clearCell(selectedIndex);
+      }
+    }, [selectedIndex, clearCell]
+  )
+
   return <div className="flex flex-col justify-between p-1 h-full">
     <div className="flex flex-col gap-4">
       <GameInfos />
       <GameBoard handleNumInsertion={handleNumInsertion} />
     </div>
     <div className="p-4">
-      <GameBoardButtons handleNumInsertion={handleNumInsertion} />
+      <GameBoardButtons
+        onNumPadButtonPress={handleNumInsertion}
+        onNotesButtonPress={toggleNotesMode}
+        onRemoveButtonPress={onRemoveButtonPress}
+      />
     </div>
   </div>
 }
