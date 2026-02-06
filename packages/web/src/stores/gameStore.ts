@@ -17,6 +17,18 @@ function addNote(notes: number[], noteToAdd: number): number[] {
   return [...notes, noteToAdd];
 }
 
+function mergeGrid(original: Cell[], data: Cell[]) {
+  const newGrid = data.map((cell, index) => {
+    if (original[index].given) {
+      return original[index];
+    } else {
+      return cell
+    }
+  })
+
+  return newGrid;
+}
+
 const createGameStore: StateCreator<Store> = (set, get) => ({
   grid: Array(TOTAL_CELLS).fill(null).map(() => ({
     conflicts: [],
@@ -26,7 +38,6 @@ const createGameStore: StateCreator<Store> = (set, get) => ({
     given: false,
     error: false
   })),
-  loading: true,
   difficulty: "easy",
   hints: 0,
   moves: 0,
@@ -39,6 +50,8 @@ const createGameStore: StateCreator<Store> = (set, get) => ({
   selectedIndex: null,
   isSaving: false,
   isCompleted: false,
+  isLoading: true,
+  isPaused: false,
   remainingCounts: Array(GRID_SIZE).fill(GRID_SIZE),
 
   //actions
@@ -48,24 +61,56 @@ const createGameStore: StateCreator<Store> = (set, get) => ({
       isSaving: saving
     })
   },
+  setTimeSpent: (seconds: number) => {
+    set({
+      timeSpent: seconds
+    })
+  },
+  pauseGame: () => {
+    set({
+      isPaused: true
+    })
+  },
+  resumeGame: () => {
+    set({
+      isPaused: false
+    })
+  },
   resetGame: () => {
 
   },
   loadPuzzle: (data) => {
     let grid = parsePuzzle(data.puzzle);
-
-    if (data.currentState?.length === TOTAL_CELLS) {
-      grid = data.currentState;
+    let newState = {
+      ...get(),
+      ...{
+        puzzle: data.puzzle,
+        puzzleId: data.puzzleId,
+        puzzleDate: data.puzzleDate,
+      }
     }
 
 
-    set({
+    if (data.progress !== null) {
+      if (data.progress!.currentState.length === TOTAL_CELLS) {
+        grid = mergeGrid(grid, data.progress!.currentState);
+      }
+      newState = {
+        ...newState,
+        isCompleted: data.progress!.isCompleted,
+        timeSpent: data.progress!.timeSpent,
+        hints: data.progress!.hints,
+        moves: data.progress!.moves
+      }
+    }
+
+    newState = {
+      ...newState,
       grid,
       remainingCounts: updateRemainingCounts(grid),
-      puzzle: data.puzzle,
-      puzzleId: data.puzzleId,
-      puzzleDate: data.puzzleDate,
-    })
+    }
+
+    set(newState)
   },
   selectCell: (index: number) => {
     set({ selectedIndex: Math.min(TOTAL_CELLS - 1, Math.max(0, index)) })

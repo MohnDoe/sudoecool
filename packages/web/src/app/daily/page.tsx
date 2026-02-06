@@ -12,7 +12,7 @@ export default function DailyPage() {
     async function fetchPuzzle() {
 
       const { daily, progress } = await gameApi.getTodaysPuzzle("hard");
-      loadPuzzle({ puzzle: daily.puzzle, puzzleId: daily.id, puzzleDate: daily.date, currentState: progress?.currentState });
+      loadPuzzle({ puzzle: daily.puzzle, puzzleId: daily.id, puzzleDate: daily.date, progress });
       setLoading(true)
 
     }

@@ -17,14 +17,25 @@ export interface GameState {
   timeSpent: number,
 
   status: "ongoing" | "completed" | "failed",
-  loading: boolean,
+
+  isLoading: boolean,
   isSaving: boolean,
-  isCompleted: boolean
+  isCompleted: boolean,
+  isPaused: boolean
 }
 
 export interface GameActions {
   resetGame: () => void,
-  loadPuzzle: (data: { puzzle: string, currentState?: Cell[], puzzleId?: string, puzzleDate?: string }) => void,
+  loadPuzzle: (data: {
+    puzzle: string, puzzleId?: string, puzzleDate?: string, progress?: {
+      currentState: Cell[],
+      moves: number,
+      hints: number,
+      timeSpent: number,
+      isCompleted: boolean,
+      lastSavedAt: string,
+    } | null
+  }) => void,
   selectCell: (index: number) => void,
   unselectCell: () => void,
   setCellValue: (index: number, num: number | null) => void,
@@ -35,6 +46,9 @@ export interface GameActions {
   clearColOfNote: (col: number, num: number, index: number) => void,
   clearRegionOfNote: ({ col, row }: { col: number, row: number }, num: number, index: number) => void,
   setIsSaving: (saving: boolean) => void,
+  setTimeSpent: (seconds: number) => void,
+  pauseGame: () => void,
+  resumeGame: () => void
 }
 
 

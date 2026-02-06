@@ -2,7 +2,9 @@ import { useGameStore } from "@/stores/gameStore";
 import { KeyboardEvent, useCallback, useEffect } from "react";
 import Cell from "./Cell";
 
-import { useAutoSave } from "@/hooks/useAutoSave";
+import { useGameSync } from "@/hooks/useGameSync";
+import { useGameTimer } from "@/hooks/useGameTimer";
+
 import "@/styles/sudoku.css";
 
 export default function GameBoard({
@@ -10,6 +12,7 @@ export default function GameBoard({
 }: {
   handleNumInsertion: (num: number) => void
 }) {
+  const { getExactTime } = useGameTimer();
   const {
     grid,
     selectedIndex,
@@ -19,7 +22,7 @@ export default function GameBoard({
     selectCell,
   } = useGameStore();
 
-  useAutoSave();
+  useGameSync({ getTime: getExactTime });
 
   const handleRelativeMove = useCallback(
     (arrow: string) => {
