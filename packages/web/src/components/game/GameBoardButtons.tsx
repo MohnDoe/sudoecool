@@ -22,12 +22,12 @@ export default function GameBoargButtons({
       <Switch id="fast-mode" defaultChecked />
     </div>
     <div className="flex gap-2">
-      <Button size="2lg" variant="outline" className="grow relative elevated elevated--xs" onClick={onNotesButtonPress}>
+      <Button size="2lg" variant="outline" className="grow relative elevated elevated--xs bg-white" onClick={onNotesButtonPress}>
         <Badge variant={notesMode ? 'default' : 'outline'} className="absolute top-2 right-2">{notesMode ? "On" : "Off"}</Badge>
         <Pen />
         Notes
       </Button>
-      <Button size="2lg" variant="outline" className="grow elevated elevated--xs" onClick={onRemoveButtonPress}>
+      <Button size="2lg" variant="outline" className="grow elevated elevated--xs bg-white" onClick={onRemoveButtonPress}>
         <Trash /> Clear
       </Button>
     </div>
