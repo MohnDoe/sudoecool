@@ -9,9 +9,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   if (discordStore.sdk && (discordStore.sdk instanceof DiscordSDK || discordStore.sdk instanceof DiscordSDKMock)) {
     discordSdk = discordStore.sdk;
   } else {
-
-
-
     const queryParams = new URLSearchParams(window.location.search);
     const isEmbedded = queryParams.get('frame_id') != null;
 

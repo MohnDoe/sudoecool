@@ -1,0 +1,24 @@
+:root {
+    --cell-border-color: #ccc;
+    --cell-border-thickness: 1px;
+    --region-border-color: var(--ui-primary);
+    --region-border-thickness: 3px;
+
+    --cell-size-mobile: 40px;
+    --cell-size-tablet: 40px;
+    --cell-size-desktop: 48px;
+
+    --cell-border-color: var(--color-border);
+
+    --cell-given-background: oklch(from var(--ui-primary) calc(l + 1) calc(c - 0.1) h);
+    --cell-selected-background: var(--ui-primary);
+
+    --cell-same-background: oklch(from var(--cell-selected-background) calc(l + 0.05) calc(c + 0.7) h);
+
+    --cell-highlight-background: oklch(from var(--ui-primary) l c h / 7%);
+
+    --cell-error-foreground: var(--ui-destructive);
+    --cell-error-background: oklch(from var(--cell-error-foreground) l c h /50%);
+
+    --sudoku-region-spacing: 8px;
+}

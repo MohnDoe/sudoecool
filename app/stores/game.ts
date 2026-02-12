@@ -1,5 +1,5 @@
 import type { SudokuDifficulty, Cell } from '#shared/types/sudoku';
-import { GRID_SIZE, TOTAL_CELLS } from "#shared/utils/sudoku"
+import { GRID_SIZE, parsePuzzle, TOTAL_CELLS } from "#shared/utils/sudoku"
 
 interface GameState {
   puzzle: string | null,
@@ -25,7 +25,7 @@ interface GameState {
 }
 
 
-export const useGameStore = defineStore('gameStore', () => {
+export const useGameStore = defineStore('gameStore', {
   state: (): GameState => {
     return {
       grid: Array(TOTAL_CELLS).fill(null).map(() => ({
@@ -51,6 +51,18 @@ export const useGameStore = defineStore('gameStore', () => {
       isLoading: true,
       isPaused: false,
       remainingCounts: Array(GRID_SIZE).fill(GRID_SIZE),
+    }
+  },
+  getters: {},
+  actions: {
+    loadPuzzle({ puzzle }: { puzzle: string }) {
+      let grid = parsePuzzle(puzzle);
+
+      this.grid = grid;
+    },
+    selectCell(index: number) {
+      console.log("selectcell", index)
+      this.selectedIndex = Math.min(TOTAL_CELLS - 1, Math.max(0, index))
     }
   }
 });

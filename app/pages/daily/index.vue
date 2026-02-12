@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import { getSudoku } from "sudoku-gen"
 definePageMeta({
   middleware: ['authenticated']
 })
 
-const { auth } = useDiscordStore();
+const { loadPuzzle } = useGameStore();
+watchEffect(() => {
+  const dailySudoku = getSudoku('easy')
+  loadPuzzle(dailySudoku)
+})
+
 </script>
 <template>
   <div>
-    <p>Daily page yay</p>
+    <SudokuBoard :handleNumInsertion="() => { }" />
   </div>
 </template>
