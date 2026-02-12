@@ -6,22 +6,31 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   let discordSdk: DiscordSDK | DiscordSDKMock;
 
-  const queryParams = new URLSearchParams(window.location.search);
-  const isEmbedded = queryParams.get('frame_id') != null;
-
-  if (isEmbedded) {
-    discordSdk = new DiscordSDK(config.public.discordClientId, {
-      disableConsoleLogOverride: false
-    });
+  if (discordStore.sdk && (discordStore.sdk instanceof DiscordSDK || discordStore.sdk instanceof DiscordSDKMock)) {
+    discordSdk = discordStore.sdk;
   } else {
-    // Development/testing mode - use mock SDK
-    discordSdk = new DiscordSDKMock(config.public.discordClientId, null, null, null);
-    console.log("Using mock SDK")
-    // patchUrlMappings([{ prefix: '/api', target: 'localhost:3001' }]);
+
+
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const isEmbedded = queryParams.get('frame_id') != null;
+
+    discordStore.setStatus("initializing");
+
+    if (isEmbedded) {
+      discordSdk = new DiscordSDK(config.public.discordClientId, {
+        disableConsoleLogOverride: false
+      });
+    } else {
+      // Development/testing mode - use mock SDK
+      discordSdk = new DiscordSDKMock(config.public.discordClientId, null, null, null);
+      console.log("Using mock SDK")
+      // patchUrlMappings([{ prefix: '/api', target: 'localhost:3001' }]);
+    }
+
+    await discordSdk.ready();
+
   }
-
-  await discordSdk.ready();
-
   discordStore.setSdk(discordSdk);
 
   return {

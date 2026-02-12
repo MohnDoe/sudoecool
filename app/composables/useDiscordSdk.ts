@@ -8,14 +8,26 @@ export const useDiscordSDK = () => {
   const config = useRuntimeConfig();
 
   const authenticate = async () => {
-    console.debug("Initializing auth.");
+    console.debug("[discordSDK] Authenticating");
     if (!discordStore.sdk) {
-      discordStore.setError("Discord SDK not initialized");
+      console.warn("[discordSDK] Missing SDK")
       return;
     }
+
+
+    if (discordStore.isAuthenticated) {
+      console.log("[discordSDK] Already authenticated")
+      discordStore.setStatus('authenticated');
+      discordStore.clearError();
+      return;
+    }
+
     try {
-      discordStore.setLoading(true);
+      console.log("[discordSDK] Authorizing via Discord API")
+      discordStore.setStatus('authenticating');
+      discordStore.clearError();
       // Authorize with Discord Client
+      await new Promise(f => setTimeout(f, 1000));
       const { code } = await discordStore.sdk.commands.authorize({
         client_id: config.public.discordClientId,
         response_type: 'code',
@@ -75,8 +87,6 @@ export const useDiscordSDK = () => {
       const message = err instanceof Error ? err.message : 'Unknown error';
       discordStore.setError(message);
       console.error('Discord SDK initialization failed PROUT:', message, err);
-    } finally {
-      discordStore.setLoading(false);
     }
   }
 
