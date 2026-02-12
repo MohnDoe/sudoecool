@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const { grid } = useGameStore();
+const { cellConflicts } = storeToRefs(useGameStore())
 const {
-  cell, isSelected, isSameNumber, isRelated
+  cell, isSelected, isSameNumber, isRelated, index
 } = defineProps<{
   cell: Cell
   index: number
@@ -10,7 +12,12 @@ const {
   selectedCellValue: number | null
 }>()
 
-const hasError = cell.error;
+const hasError = ref(false);
+
+watch(grid, () => {
+  // TODO: is this good ?
+  hasError.value = cell.error || cellConflicts.value(index).length > 0
+})
 
 const cellClasses = computed(() => ({
   "sudoku-cell--filled": cell.value !== null,
@@ -19,7 +26,7 @@ const cellClasses = computed(() => ({
   "sudoku-cell--related": isRelated,
   "sudoku-cell--selected": isSelected,
   "sudoku-cell--same": isSameNumber,
-  "sudoku-cell--error": hasError
+  "sudoku-cell--error": hasError.value
 }))
 </script>
 
@@ -97,6 +104,7 @@ const cellClasses = computed(() => ({
   bottom: 8px;
   left: 8px;
   right: 8px;
-  background-color: var(--color-destructive);
+  /* background-color: var(--color-destructive); */
+  background-color: red;
 }
 </style>

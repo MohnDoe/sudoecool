@@ -1,6 +1,5 @@
 import type { SudokuDifficulty, Cell } from '#shared/types/sudoku';
 import { GRID_SIZE, parsePuzzle, TOTAL_CELLS } from "#shared/utils/sudoku"
-import { numeric } from 'drizzle-orm/pg-core';
 
 interface GameState {
   puzzle: string | null,
@@ -64,7 +63,54 @@ export const useGameStore = defineStore('gameStore', {
       remainingCounts: Array(GRID_SIZE).fill(GRID_SIZE),
     }
   },
-  getters: {},
+  getters: {
+    cellConflicts: (state: GameState) => {
+      return (index: number) => {
+        const cell = state.grid[index];
+        if (!cell) return [];
+
+        const value = cell.value;
+        if (value === null || cell.given) return [];
+
+        const conflicts: number[] = [];
+
+        const row = Math.floor(index / GRID_SIZE);
+        const col = index % GRID_SIZE;
+
+        // ROW
+        for (let c = 0; c < GRID_SIZE; c++) {
+          const i = row * GRID_SIZE + c;
+          if (i !== index && state.grid[i]!.value == value) {
+            conflicts.push(i);
+          }
+        }
+
+        // COL
+        for (let r = 0; r < GRID_SIZE; r++) {
+          const i = r * GRID_SIZE + col;
+          if (i !== index && state.grid[i]!.value == value) {
+            conflicts.push(i);
+          }
+        }
+
+        // Box
+        const boxRow = Math.floor(row / 3)
+        const boxCol = Math.floor(col / 3)
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const i = (boxRow * 3 + r) * GRID_SIZE + (boxCol * 3 + c)
+            if (i !== index && state.grid[i]!.value === value) {
+              conflicts.push(i)
+            }
+          }
+        }
+
+        console.debug(`conflicts on ${index}`, conflicts)
+
+        return conflicts;
+      }
+    }
+  },
   actions: {
     loadPuzzle({ puzzle }: { puzzle: string }) {
       let grid = parsePuzzle(puzzle);
@@ -72,7 +118,6 @@ export const useGameStore = defineStore('gameStore', {
       this.grid = grid;
     },
     selectCell(index: number) {
-      console.log("selectcell", index)
       this.selectedIndex = Math.min(TOTAL_CELLS - 1, Math.max(0, index))
     },
     unselectCell() {
