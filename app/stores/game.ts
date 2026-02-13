@@ -69,6 +69,7 @@ export const useGameStore = defineStore('gameStore', {
       return state.grid.find((_, index) => index == state.selectedIndex) ?? null
     },
     cellConflicts: (state: GameState) => {
+      // TODO : fix conflicts for "given" cells
       return (index: number) => {
         const cell = state.grid[index];
         if (!cell) return [];
@@ -108,8 +109,6 @@ export const useGameStore = defineStore('gameStore', {
             }
           }
         }
-
-        console.debug(`conflicts on ${index}`, conflicts)
 
         return conflicts;
       }
