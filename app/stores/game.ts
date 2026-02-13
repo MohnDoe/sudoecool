@@ -10,7 +10,6 @@ interface GameState {
   grid: Cell[],
   selectedIndex: number | null
   notesMode: boolean,
-  remainingCounts: number[],
 
   moves: number,
   hints: number,
@@ -60,13 +59,25 @@ export const useGameStore = defineStore('gameStore', {
       isCompleted: false,
       isLoading: true,
       isPaused: false,
-      remainingCounts: Array(GRID_SIZE).fill(GRID_SIZE),
     }
   },
   getters: {
     selectedCell: (state): Cell | null => {
       if (state.selectedIndex == null) return null;
       return state.grid.find((_, index) => index == state.selectedIndex) ?? null
+    },
+    remainingCount: (state) => {
+      return (num: number) =>
+        state.grid.reduce(
+          (prev, cell) => {
+            let remaining = prev;
+            if (cell.value === num) {
+              remaining--;
+            }
+
+            return Math.max(0, remaining);
+          }, GRID_SIZE)
+
     },
     cellConflicts: (state: GameState) => {
       // TODO : fix conflicts for "given" cells

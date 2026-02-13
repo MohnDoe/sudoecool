@@ -16,7 +16,7 @@
   --ui-text-highlighted: var(--ui-color-neutral-900);
   --ui-text-inverted: white;
   
-  --ui-bg: oklch(from var(--ui-primary) l c h / 5% );
+  --ui-bg: oklch(0.9772 0.0132 102.01);
   --ui-bg-muted: var(--ui-color-neutral-50);
   --ui-bg-elevated: var(--ui-color-neutral-100);
   --ui-bg-accented: var(--ui-color-neutral-200);

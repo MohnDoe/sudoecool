@@ -13,6 +13,6 @@ watchEffect(() => {
 </script>
 <template>
   <div>
-    <SudokuBoard />
+    <SudokuGame />
   </div>
 </template>
