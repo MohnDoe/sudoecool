@@ -26,5 +26,8 @@ export default defineNuxtConfig({
       dialect: "postgresql",
       driver: "neon-http"
     }
+  },
+  ui: {
+    colorMode: false
   }
 })

@@ -62,7 +62,7 @@ const cellClasses = reactive({
   border: var(--cell-border-thickness) solid var(--cell-border-color);
   cursor: pointer;
   position: relative;
-  background-color: var(--color-background);
+  background-color: var(--cell-background-color);
   box-sizing: border-box;
 }
 
