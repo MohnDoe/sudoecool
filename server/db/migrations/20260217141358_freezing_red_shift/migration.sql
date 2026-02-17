@@ -1,0 +1,2 @@
+ALTER TABLE "game_progress" ALTER COLUMN "puzzle_id" SET DATA TYPE uuid USING "puzzle_id"::uuid;--> statement-breakpoint
+ALTER TABLE "game_results" ALTER COLUMN "puzzle_id" SET DATA TYPE uuid USING "puzzle_id"::uuid;

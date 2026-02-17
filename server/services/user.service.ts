@@ -7,7 +7,7 @@ import * as schema from "#server/db/schema";
 
 
 export class UserService {
-  static async syncUser(user: Omit<DiscordAuth['user'], 'userId'>): Promise<typeof schema.users.$inferInsert> {
+  static async syncUser(user: Omit<DiscordAuth['user'], 'userId'>): Promise<typeof schema.users.$inferSelect> {
     console.log("UserService sync")
     const existing = await db
       .select()

@@ -1,5 +1,5 @@
 CREATE TABLE "daily_puzzles" (
-	"id" text PRIMARY KEY,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"date" text NOT NULL UNIQUE,
 	"puzzle" jsonb NOT NULL,
 	"solution" jsonb NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE "daily_puzzles" (
 );
 --> statement-breakpoint
 CREATE TABLE "game_progress" (
-	"id" text PRIMARY KEY,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"user_id" uuid NOT NULL,
 	"puzzle_id" text NOT NULL,
 	"current_state" jsonb NOT NULL,
 	"moves" integer DEFAULT 0 NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE "game_progress" (
 );
 --> statement-breakpoint
 CREATE TABLE "game_results" (
-	"id" text PRIMARY KEY,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"user_id" uuid NOT NULL,
 	"puzzle_id" text NOT NULL,
 	"time_taken" integer NOT NULL,
 	"moves" integer NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE "game_results" (
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" text PRIMARY KEY,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"discord_id" text NOT NULL UNIQUE,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()

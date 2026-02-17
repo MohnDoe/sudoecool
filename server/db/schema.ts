@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm/_relations";
-import { boolean, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: text('id').primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey(),
   discordId: text('discord_id').unique().notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
@@ -10,7 +10,7 @@ export const users = pgTable("users", {
 
 // Daily puzzle configuration (one per day)
 export const dailyPuzzles = pgTable('daily_puzzles', {
-  id: text('id').primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey(),
   date: text('date').notNull().unique(), // Format: YYYY-MM-DD
   puzzle: jsonb('puzzle').notNull(), // Sudoku grid as JSON
   solution: jsonb('solution').notNull(), // Solution grid as JSON
@@ -21,11 +21,11 @@ export const dailyPuzzles = pgTable('daily_puzzles', {
 
 // User game progress (auto-saved on each move)
 export const gameProgress = pgTable('game_progress', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  puzzleId: text('puzzle_id')
+  puzzleId: uuid('puzzle_id')
     .notNull()
     .references(() => dailyPuzzles.id, { onDelete: 'cascade' }),
   currentState: jsonb('current_state').notNull(), // Current grid state
@@ -40,11 +40,11 @@ export const gameProgress = pgTable('game_progress', {
 
 // Completed game results (final scores)
 export const gameResults = pgTable('game_results', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  puzzleId: text('puzzle_id')
+  puzzleId: uuid('puzzle_id')
     .notNull()
     .references(() => dailyPuzzles.id, { onDelete: 'cascade' }),
   timeTaken: integer('time_taken').notNull(), // Total seconds

@@ -1,10 +1,12 @@
-import { GameService } from "~~/server/services/game.service";
-import { requireDiscordAuth } from "~~/server/utils/discordAuth"
+import { GameService } from "#server/services/game.service";
+import { requireDiscordAuth } from "#server/utils/discordAuth";
+import { gameProgress } from "#server/db/schema";
 
-import { schema } from "@nuxthub/db"
-import { createInsertSchema } from "drizzle-orm/zod"
+import { createInsertSchema } from "drizzle-orm/zod";
+import { z } from "zod/v4";
 
-const progressInsertSchema = createInsertSchema(schema.gameProgress);
+const progressInsertSchema = createInsertSchema(gameProgress);
+export type PostProgressBody = z.infer<typeof progressInsertSchema>;
 
 export default defineEventHandler(async (event) => {
   const session = await requireDiscordAuth(event);
@@ -18,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const progress = await GameService.saveProgress(userId!, result.data.id, result.data);
+    const progress = await GameService.saveProgress(userId!, result.data.puzzleId, result.data);
 
     return {
       success: true,

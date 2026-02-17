@@ -1,5 +1,7 @@
-import type { SudokuDifficulty, Cell } from '#shared/types/sudoku';
-import { GRID_SIZE, parsePuzzle, TOTAL_CELLS } from "#shared/utils/sudoku"
+import { GRID_SIZE, parsePuzzle, TOTAL_CELLS } from "#shared/utils/sudoku";
+
+import type { GameProgress } from "#shared/types/game";
+import type { Cell, SudokuDifficulty } from '#shared/types/sudoku';
 
 interface GameState {
   puzzle: string | null,
@@ -141,15 +143,17 @@ export const useGameStore = defineStore('gameStore', {
       if (data.value) {
         this.loadGame({
           puzzle: data.value.daily.puzzle,
+          puzzleId: data.value.daily.id,
+          progress: data.value.progress as GameProgress
         })
       }
 
-      // TODO : include user progress
       this.isLoading = false
     },
-    loadGame({ puzzle }: { puzzle: string }) {
+    loadGame({ puzzle, puzzleId, progress }: { puzzle: string, puzzleId: string, progress?: GameProgress }) {
       let grid = parsePuzzle(puzzle);
 
+      this.puzzleId = puzzleId
       this.grid = grid;
       this.hints = 0
       this.moves = 0
@@ -157,20 +161,16 @@ export const useGameStore = defineStore('gameStore', {
       this.isCompleted = false
       this.isPaused = false
       this.selectedIndex = null
-      const gameTimerStore = useGameTimerStore();
-      gameTimerStore.reset();
-
-      // if progress
-      // this.resumeGame(progress) 
-
-
-      gameTimerStore.start();
+      if (progress) {
+        this.loadProgress(progress)
+      } else {
+        const gameTimerStore = useGameTimerStore();
+        gameTimerStore.reset();
+        gameTimerStore.start();
+      }
     },
-    // Resume a saved game
-    resumeGame(savedState: Partial<GameState>) {
-      // Restore game state
-      Object.assign(this.$state, savedState)
-      this.isPaused = false
+    loadProgress(savedState: GameProgress) {
+      this.grid = savedState.currentState
 
       // Load the saved time into timer and start it
       const timerStore = useGameTimerStore()
@@ -178,10 +178,8 @@ export const useGameStore = defineStore('gameStore', {
       timerStore.start()
     },
 
-    // Pause the game
     pauseGame() {
       this.isPaused = true
-
       // Pause timer and sync time
       const timerStore = useGameTimerStore()
       timerStore.pause()

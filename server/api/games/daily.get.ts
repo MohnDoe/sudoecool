@@ -1,5 +1,5 @@
-import { GameService } from "~~/server/services/game.service";
-import { requireDiscordAuth } from "~~/server/utils/discordAuth"
+import { GameService } from "#server/services/game.service";
+import { requireDiscordAuth } from "#server/utils/discordAuth";
 
 export default defineEventHandler(async (event) => {
   const session = await requireDiscordAuth(event);

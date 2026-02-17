@@ -4,6 +4,7 @@ definePageMeta({
 })
 
 const { initDaily, isLoading } = useGameStore();
+useGameSync();
 
 // Load game on mount
 onMounted(async () => {

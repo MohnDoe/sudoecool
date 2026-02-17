@@ -1,13 +1,14 @@
 
+import { generateRandomSudoku } from "#shared/utils/sudoku";
+import db from "#server/db";
+import * as schema from "#server/db/schema";
+
 import { and, DrizzleError, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import { generateRandomSudoku } from "~~/shared/utils/sudoku";
 
-import db from "#server/db"
-import * as schema from "#server/db/schema"
 
 export class GameService {
-  static async getTodaysPuzzle(difficulty: SudokuDifficulty): Promise<typeof schema.dailyPuzzles.$inferSelect | typeof schema.dailyPuzzles.$inferInsert> {
+  static async getTodaysPuzzle(difficulty: SudokuDifficulty): Promise<typeof schema.dailyPuzzles.$inferSelect> {
     try {
       const today = new Date().toISOString().split('T')[0]!; // YYYY-MM-DD
 
@@ -68,7 +69,7 @@ export class GameService {
     userId: string,
     puzzleId: string,
     data: typeof schema.gameProgress.$inferInsert
-  ): Promise<typeof schema.gameProgress.$inferInsert> {
+  ): Promise<typeof schema.gameProgress.$inferSelect> {
     try {
       const now = new Date();
 

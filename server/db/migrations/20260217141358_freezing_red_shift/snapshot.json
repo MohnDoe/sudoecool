@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "8f507bb8-3dee-414a-b0ca-787a33419c5d",
+  "id": "daba68de-03c3-4055-957a-d69a7106a1b6",
   "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
+    "1f4d2d04-6cc3-4f04-bc69-bd375cb122d5"
   ],
   "ddl": [
     {
@@ -31,11 +31,11 @@
       "schema": "public"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
       "name": "id",
@@ -122,11 +122,11 @@
       "table": "daily_puzzles"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
       "name": "id",
@@ -135,7 +135,7 @@
       "table": "game_progress"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -148,7 +148,7 @@
       "table": "game_progress"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -265,11 +265,11 @@
       "table": "game_progress"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
       "name": "id",
@@ -278,7 +278,7 @@
       "table": "game_results"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -291,7 +291,7 @@
       "table": "game_results"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -382,11 +382,11 @@
       "table": "game_results"
     },
     {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
       "name": "id",
