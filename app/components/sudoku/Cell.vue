@@ -33,15 +33,15 @@ const isSameNumber = computed(() => {
     cell.value === selectedCell.value?.value
 })
 
-const cellClasses = reactive({
+const cellClasses = computed(() => ({
   "sudoku-cell--filled": cell.value !== null,
   "sudoku-cell--empty": cell.value === null && !cell.given,
   "sudoku-cell--given": cell.given,
-  "sudoku-cell--related": isRelated,
-  "sudoku-cell--selected": isSelected,
-  "sudoku-cell--same": isSameNumber,
-  "sudoku-cell--error": hasError
-})
+  "sudoku-cell--related": isRelated.value,
+  "sudoku-cell--selected": isSelected.value,
+  "sudoku-cell--same": isSameNumber.value,
+  "sudoku-cell--error": hasError.value
+}))
 </script>
 
 <template>
