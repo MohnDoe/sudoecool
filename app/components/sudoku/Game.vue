@@ -1,4 +1,13 @@
+<script setup lang="ts">
+import PauseModal from './PauseModal.vue';
+
+const { isPaused } = storeToRefs(useGameStore());
+
+
+</script>
+
 <template>
+  <PauseModal />
   <UContainer class="
     h-full w-full max-w-md
     
