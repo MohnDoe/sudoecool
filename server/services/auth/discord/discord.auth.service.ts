@@ -29,18 +29,21 @@ export interface DiscordAPIUser {
   premium_type?: number;
 }
 
+const config = useRuntimeConfig();
+
 /**
  * Exchange Discord authorization code for access token
  */
 export async function exchangeCodeForToken(code: string): Promise<DiscordAPIToken> {
+
   const tokenResponse = await fetch(`${DISCORD_API}/oauth2/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID!,
-      client_secret: process.env.DISCORD_CLIENT_SECRET!,
+      client_id: config.discord.clientId,
+      client_secret: config.discord.clientSecret,
       grant_type: 'authorization_code',
       code,
     }),
@@ -81,8 +84,8 @@ export async function refreshAccessToken(refreshToken: string): Promise<DiscordA
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID!,
-      client_secret: process.env.DISCORD_CLIENT_SECRET!,
+      client_id: config.discord.clientId,
+      client_secret: config.discord.clientSecret,
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     }),

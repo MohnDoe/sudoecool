@@ -1,5 +1,8 @@
 <template>
-  <div class="app h-screen">
-    <slot />
-  </div>
+  <UApp>
+    <!-- <AppHeader /> -->
+    <UContainer>
+      <slot />
+    </UContainer>
+  </UApp>
 </template>

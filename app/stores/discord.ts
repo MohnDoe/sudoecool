@@ -3,43 +3,56 @@ import type { DiscordSDK, DiscordSDKMock } from "@discord/embedded-app-sdk";
 type AuthStatus = 'idle' | 'initializing' | 'authenticating' | 'authenticated' | 'error'
 
 interface DiscordState {
-  sdk: DiscordSDK | DiscordSDKMock | null;
-  auth: DiscordAuth | null;
-  status: AuthStatus;
-  error: string | null;
+  sdkReady: boolean;
+  sdkAuthenticated: boolean;
+  loading: boolean;
+
+  error: Error | null;
+}
+
+const initialState: DiscordState = {
+  sdkAuthenticated: false,
+  loading: false,
+  sdkReady: false,
+  error: null,
 }
 
 export const useDiscordStore = defineStore('discordStore', {
-  state: (): DiscordState => {
-    return {
-      sdk: null,
-      auth: null,
-      error: null,
-      status: 'idle'
-    }
-  },
+  state: (): DiscordState => initialState,
   getters: {
-    user: (state): DiscordAuth['user'] | null => state.auth?.user || null,
-    isAuthenticated: (state): boolean => !!state.auth?.user || state.status == 'authenticated'
+    isFullyReady: (state) => state.sdkReady && state.sdkAuthenticated && !state.loading,
+    hasError: (state) => state.error != null
   },
   actions: {
-    setSdk(sdk: DiscordSDK | DiscordSDKMock) {
-      this.sdk = sdk;
-      this.status = 'initializing';
+    setReady(val: boolean) {
+      this.sdkReady = val
     },
-    setError(error: string) {
-      this.status = 'error';
-      this.error = error;
+    setLoading(loading: boolean) {
+      this.loading = loading
     },
-    clearError() {
-      this.error = null;
+    setError(err: Error) {
+      this.error = err;
+      this.loading = false
+      console.error("Discord SDK Error", err)
     },
-    setStatus(status: AuthStatus) {
-      this.status = status
+    async setSdkAuthenticated(sdk: DiscordSDK | DiscordSDKMock, access_token?: string) {
+      this.loading = true;
+      try {
+        if (access_token) {
+          await sdk.commands.authenticate({ access_token });
+        }
+
+        this.sdkAuthenticated = true;
+      } catch (err) {
+        this.setError(err as Error);
+        throw err;
+      } finally {
+        this.loading = false;
+      }
     },
-    setAuth(auth: DiscordAuth) {
-      this.status = 'authenticated'
-      this.auth = auth;
-    },
+    reset() {
+      this.$reset()
+    }
+
   },
 })

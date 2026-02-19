@@ -142,6 +142,7 @@ export const useGameStore = defineStore('gameStore', {
   },
   actions: {
     async initDaily() {
+      console.log("gameStore.initDaily");
       this.isLoading = true;
       const { data } = await useFetch('/api/games/daily');
 

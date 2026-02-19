@@ -1,38 +1,67 @@
-import { DiscordSDK, DiscordSDKMock, patchUrlMappings } from "@discord/embedded-app-sdk";
+import type { Types as DiscordSDKTypes } from "@discord/embedded-app-sdk";
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin(async () => {
   const config = useRuntimeConfig();
   const discordStore = useDiscordStore();
+  const discordSdk = useDiscordSdk();
+  const { fetch: fetchSession, loggedIn, ready } = useUserSession();
 
-  let discordSdk: DiscordSDK | DiscordSDKMock;
+  const init = async () => {
 
-  if (discordStore.sdk && (discordStore.sdk instanceof DiscordSDK || discordStore.sdk instanceof DiscordSDKMock)) {
-    discordSdk = discordStore.sdk;
-  } else {
-    const queryParams = new URLSearchParams(window.location.search);
-    const isEmbedded = queryParams.get('frame_id') != null;
+    try {
+      await discordSdk.ready();
+      discordStore.setReady(true);
 
-    discordStore.setStatus("initializing");
+      console.log('Discord SDK ready');
 
-    if (isEmbedded) {
-      discordSdk = new DiscordSDK(config.public.discordClientId, {
-        disableConsoleLogOverride: false
-      });
-    } else {
-      // Development/testing mode - use mock SDK
-      discordSdk = new DiscordSDKMock(config.public.discordClientId, null, null, null);
-      console.log("Using mock SDK")
-      // patchUrlMappings([{ prefix: '/api', target: 'localhost:3001' }]);
+      await fetchSession();
+
+      if (loggedIn.value && ready.value) {
+        console.log("Existing session found, skipping OAuth flow");
+        await discordStore.setSdkAuthenticated(discordSdk);
+        return
+      }
+
+      discordStore.setLoading(true);
+
+      const { code } = await discordSdk.commands.authorize({
+        client_id: config.public.discordClientId,
+        response_type: 'code',
+        state: '',
+        prompt: 'none',
+        scope: config.public.discordScope as DiscordSDKTypes.OAuthScopes[]
+      })
+
+      console.log('✅ Got auth code from Discord')
+
+      const { access_token } = await $fetch<{ access_token: string }>(
+        '/api/auth/discord/token',
+        {
+          method: 'POST',
+          body: { code },
+        }
+      )
+
+      console.log('✅ Token exchange successful')
+
+      await fetchSession()
+
+      await discordStore.setSdkAuthenticated(discordSdk, access_token)
+
+    } catch (error) {
+      console.error("Discord auth failed:", error);
+      discordStore.setError(error as Error)
+    } finally {
+      discordStore.setLoading(false)
     }
 
-    await discordSdk.ready();
-
   }
-  discordStore.setSdk(discordSdk);
+
+  await init();
 
   return {
     provide: {
-      discordSdk,
-    },
-  };
+      initDiscordClient: init
+    }
+  }
 });

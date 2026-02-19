@@ -5,6 +5,7 @@ export default defineEventHandler({
   onRequest: [],
   onBeforeResponse: [],
   handler: async (event) => {
+    const config = useRuntimeConfig();
     try {
       const { code } = await readBody(event);
 
@@ -18,7 +19,7 @@ export default defineEventHandler({
       let tokenData: DiscordAPIToken;
       let discordUser: DiscordAPIUser;
 
-      if (process.env.NODE_ENV === 'development' && code === 'mock_code') {
+      if (config.public.devMode && code === 'mock_code') {
         console.warn("[/api/auth/discord/token] Using Mock user !")
         discordUser = {
           avatar: null,
@@ -51,34 +52,33 @@ export default defineEventHandler({
       });
 
 
-
       await setUserSession(event, {
         user: {
           id: user.id,
-          discordId: user.discordId
+          discordId: user.discordId,
+          globalName: discordUser.global_name,
+          username: discordUser.username,
+          discriminator: discordUser.discriminator
         },
         secure: {
-          token: tokenData
+          discordAccessToken: tokenData.access_token,
+          discordRefreshToken: tokenData.refresh_token
         }
       })
 
       setResponseStatus(event, 200)
 
       // Return access token and user info
-      const response = {
+      return {
         access_token: tokenData.access_token,
-        refresh_token: tokenData.refresh_token,
-        expires_in: tokenData.expires_in,
-        user,
-      }
-      return response;
+      };
     } catch (error) {
       console.error('Token endpoint error:', error);
-      setResponseStatus(event, 500);
-      return {
-        error: 'Failed to exchange code for token',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      }
+
+      throw createError({
+        statusCode: 500,
+        message: 'Failed to exchange code for token',
+      })
 
 
     }

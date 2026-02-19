@@ -4,6 +4,9 @@ declare module '#auth-utils' {
   interface User {
     id: string;
     discordId: string;
+    username: string;
+    globalName: string | null;
+    discriminator: string
   }
 
   interface UserSession {
@@ -11,7 +14,8 @@ declare module '#auth-utils' {
   }
 
   interface SecureSessionData {
-    token: DiscordAPIToken
+    discordAccessToken: DiscordAPIToken['access_token']
+    discordRefreshToken: DiscordAPIToken['refresh_token']
   }
 }
 
