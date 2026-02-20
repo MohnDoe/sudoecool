@@ -92,6 +92,7 @@ export function useGameSync(saveIntervalMs: number = 10_000) {
       'pauseGame',
       'insertNumber',
       'clearCell',
+      'resetGrid'
     ]
 
     if (actionsToSave.includes(action.name)) {

@@ -2,6 +2,7 @@ import { GRID_SIZE, parsePuzzle, TOTAL_CELLS } from "#shared/utils/sudoku";
 
 import type { GameProgress } from "#shared/types/game";
 import type { Cell, SudokuDifficulty } from '#shared/types/sudoku';
+import { parse } from "@electric-sql/pglite";
 
 interface GameState {
   puzzle: string | null,
@@ -38,17 +39,19 @@ function addNote(notes: number[], noteToAdd: number): number[] {
   return [...notes, noteToAdd];
 }
 
+const emptyGrid = Array(TOTAL_CELLS).fill(null).map(() => ({
+  conflicts: [],
+  notes: [],
+  state: 'empty',
+  value: null,
+  given: false,
+  error: false
+}))
+
 export const useGameStore = defineStore('gameStore', {
   state: (): GameState => {
     return {
-      grid: Array(TOTAL_CELLS).fill(null).map(() => ({
-        conflicts: [],
-        notes: [],
-        state: 'empty',
-        value: null,
-        given: false,
-        error: false
-      })),
+      grid: emptyGrid,
       difficulty: "easy",
       hints: 0,
       moves: 0,
@@ -173,14 +176,22 @@ export const useGameStore = defineStore('gameStore', {
         this.isVerifying = false
       }
     },
+    resetGrid() {
+      if (this.puzzle) {
+        this.grid = emptyGrid;
+        this.grid = parsePuzzle(this.puzzle);
+        this.selectedIndex = null;
+      }
+    },
     loadGame({ puzzle, puzzleId, progress }: { puzzle: string, puzzleId: string, progress?: GameProgress }) {
-      let grid = parsePuzzle(puzzle);
-
+      this.puzzle = puzzle;
       this.puzzleId = puzzleId
-      this.grid = grid;
+      this.grid = parsePuzzle(this.puzzle);
+
       this.hints = 0
       this.moves = 0
       this.mistakes = 0;
+
       this.status = 'ongoing'
       this.isCompleted = false
       this.isPaused = false
@@ -295,8 +306,6 @@ export const useGameStore = defineStore('gameStore', {
         this.clearRowOfNote(row, value, index);
         this.clearRegionOfNote({ col, row }, value, index)
       }
-
-      // TODO: update conflicts
     },
     clearCell(index: number) {
       this.setCellValue(index, null)

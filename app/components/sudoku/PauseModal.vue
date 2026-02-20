@@ -13,6 +13,12 @@ const infos = computed(() => ([
     value: gameStore.difficulty
   }
 ]))
+
+const reset = () => {
+  gameStore.resetGrid();
+  gameStore.unpauseGame();
+}
+
 </script>
 
 <template>
@@ -26,9 +32,11 @@ const infos = computed(() => ([
             <span class="text-2xl font-medium capitalize">{{ info.value }}</span>
           </div>
         </div>
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-8">
           <UButton variant="elevated" size="xl" @click="gameStore.unpauseGame">Resume game</UButton>
-          <!-- <UButton variant="ghost" size="xl">Restart</UButton> -->
+          <UButton variant="ghost" size="xl" @click="reset" class="justify-center cursor-pointer" color="neutral">
+            Reset grid
+          </UButton>
         </div>
       </div>
     </template>
