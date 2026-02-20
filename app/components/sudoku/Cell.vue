@@ -76,7 +76,6 @@ const cellClasses = computed(() => ({
 .sudoku-cell--given {
   background-color: var(--cell-given-background);
   font-weight: 700;
-  cursor: default;
 }
 
 .sudoku-cell--related::before,

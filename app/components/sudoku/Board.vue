@@ -62,8 +62,16 @@ const onKeyDown = (e: KeyboardEvent) => {
     clearCell(selectedIndex.value)
     e.preventDefault();
   }
-
 }
+
+const toggleSelectCell = (index: number) => {
+  if (index === selectedIndex.value) {
+    unselectCell();
+  } else {
+    selectCell(index);
+  }
+}
+
 const subgrids = computed(() => {
   return Array.from({ length: GRID_SIZE }, (_, b) => {
     const bandRow = Math.floor(b / 3)
@@ -88,7 +96,7 @@ const subgrids = computed(() => {
         " tabIndex="0" @keydown="onKeyDown">
       <div v-for="(box, b) in subgrids" :key="b" class="sudoku-subgrid">
         <SudokuCell v-for="{ cell, index } in box" :index="index" :key="index" :cell="cell"
-          @click="selectCell(index)" />
+          @click="toggleSelectCell(index)" />
       </div>
     </div>
   </div>
