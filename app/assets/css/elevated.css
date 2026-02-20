@@ -18,10 +18,7 @@
 }
 
 .elevated {
-  cursor: pointer;
   border-radius: var(--border-radius);
-  transition: 250ms;
-  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   box-shadow: 0 var(--elevation) 0 var(--border-width) var(--box-shadow-color), 0 0 0 var(--border-width) var(--box-shadow-color);
 }
 
@@ -29,12 +26,18 @@
   --box-shadow-color: var(--ui-primary)
 }
 
-.elevated:hover {
+button.elevated {
+  cursor: pointer;
+  transition: 250ms;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+button.elevated:hover {
   transform: translateY(var(--hover-y-offset));
   box-shadow: 0 calc(var(--elevation) - var(--hover-y-offset)) 0 var(--border-width) var(--box-shadow-color), 0 0 0 var(--border-width) var(--box-shadow-color);
 }
 
-.elevated:active {
+button.elevated:active {
   transform: translateY(var(--pressed-y-offset));
   box-shadow: 0 calc(var(--elevation) - var(--pressed-y-offset)) 0 var(--border-width) var(--box-shadow-color), 0 0 0 var(--border-width) var(--box-shadow-color);
 }

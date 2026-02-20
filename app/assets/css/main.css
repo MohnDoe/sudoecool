@@ -15,7 +15,8 @@
   --ui-text-muted: oklch(from var(--ui-text) calc(l + 0.1) c h);
   --ui-text-toned: oklch(from var(--ui-text) calc(l + 0.04) c h);
   --ui-text-highlighted: oklch(from var(--ui-text) calc(l - 0.15) c h);
-  --ui-text-inverted: oklch(from var(--ui-text) calc(1 - l) c h);
+  --ui-text-inverted: var(--foreground);
+
 
   --ui-bg: oklch(0.9772 0.0132 102.01);
   --ui-bg-muted: var(--ui-color-neutral-50);
