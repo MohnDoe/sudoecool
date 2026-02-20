@@ -172,6 +172,18 @@ export const useGameStore = defineStore('gameStore', {
             puzzleId: this.puzzleId
           }
         })
+
+        if (result.verified) {
+          this.pauseGame();
+          this.isCompleted = true;
+          if (result.stats !== null) {
+            this.hints = result.stats.hints;
+            this.mistakes = result.stats.mistakes;
+            this.timeSpent = result.stats.timeSpent;
+            this.moves = result.stats.moves;
+          }
+        }
+
       } finally {
         this.isVerifying = false
       }

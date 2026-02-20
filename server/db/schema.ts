@@ -20,6 +20,7 @@ export const gameProgress = pgTable("game_progress", {
   puzzleId: uuid("puzzle_id").notNull().references(() => dailyPuzzles.id, { onDelete: "cascade" }),
   currentState: jsonb("current_state").notNull(),
   moves: integer().default(0).notNull(),
+  notes: integer().default(0).notNull(),
   hints: integer().default(0).notNull(),
   mistakes: integer().default(0).notNull(),
   timeSpent: integer("time_spent").default(0).notNull(),
@@ -29,17 +30,6 @@ export const gameProgress = pgTable("game_progress", {
   updatedAt: timestamp("updated_at").default(sql`now()`),
 });
 
-export const gameResults = pgTable("game_results", {
-  id: uuid().defaultRandom().primaryKey(),
-  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  puzzleId: uuid("puzzle_id").notNull().references(() => dailyPuzzles.id, { onDelete: "cascade" }),
-  timeTaken: integer("time_taken").notNull(),
-  moves: integer().notNull(),
-  hints: integer().notNull(),
-  difficulty: text().notNull(),
-  score: integer().notNull(),
-  completedAt: timestamp("completed_at").default(sql`now()`),
-});
 
 export const users = pgTable("users", {
   id: uuid().defaultRandom().primaryKey(),

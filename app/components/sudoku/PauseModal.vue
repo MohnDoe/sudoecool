@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const gameStore = useGameStore();
-const { isPaused } = storeToRefs(gameStore);
+const { isPaused, isCompleted } = storeToRefs(gameStore);
 
 
 const infos = computed(() => ([
@@ -22,7 +22,7 @@ const reset = () => {
 </script>
 
 <template>
-  <UModal :dismissible="false" :open="isPaused" :close="false">
+  <UModal :dismissible="false" :open="isPaused && !isCompleted" :close="false">
     <template #body>
       <div class="flex flex-col justify-center items-center gap-10 pb-4 md:gap-5">
         <h2 class="text-3xl font-medium">Pause</h2>

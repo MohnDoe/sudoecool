@@ -45,7 +45,15 @@ export function useGameSync(saveIntervalMs: number = 10_000) {
   const debouncedSave = () => {
     if (saveTimeout) clearTimeout(saveTimeout)
     saveTimeout = setTimeout(() => {
-      performSave()
+      // Only save if not already saving and conditions met
+      if (!gameStore.isSaving && puzzleId.value && loggedIn.value && !gameStore.isPaused && !gameStore.isVerifying && !gameStore.isFilled && !gameStore.isCompleted) {
+        if (hasGameStateChanged()) {
+          performSave()
+        }
+      } else {
+        console.log("Not enough change for auto-save.")
+      }
+
     }, 2000)
   }
 
@@ -54,15 +62,7 @@ export function useGameSync(saveIntervalMs: number = 10_000) {
     if (intervalId) return; // Prevent multiple intervals
 
     intervalId = setInterval(async () => {
-      // Only save if not already saving and conditions met
-      if (!gameStore.isSaving && puzzleId.value && loggedIn.value && !gameStore.isPaused && !gameStore.isVerifying && !gameStore.isFilled) {
-        if (hasGameStateChanged()) {
-          console.log("Auto-saving ...")
-          await performSave();
-        } else {
-          console.log("Not enough change for auto-save.")
-        }
-      }
+      debouncedSave();
     }, saveIntervalMs);
   };
 

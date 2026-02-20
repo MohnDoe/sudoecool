@@ -3,7 +3,7 @@ import { generateRandomSudoku } from "#shared/utils/sudoku";
 import db from "#server/db";
 import * as schema from "#server/db/schema";
 
-import { and, DrizzleError, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 
 
@@ -76,6 +76,26 @@ export class GameService {
     }
   }
 
+  static async completePuzzle(userId: string, puzzleId: string): Promise<typeof schema.gameProgress.$inferSelect | null> {
+    const currentProgress = await this.getUserProgress(userId, puzzleId);
+
+    if (!currentProgress) return null;
+
+    try {
+      return await this.saveProgress(userId, puzzleId, {
+        ...currentProgress,
+        completedAt: new Date(),
+        updatedAt: new Date(),
+        isCompleted: true,
+      })
+    } catch (error) {
+      console.log('completePuzzle error:', error);
+      throw new Error("Failed to set puzzle as completed")
+
+    }
+
+  }
+
   static async saveProgress(
     userId: string,
     puzzleId: string,
@@ -87,12 +107,8 @@ export class GameService {
       // Check if progress already exists
       const existing = await this.getUserProgress(userId, puzzleId);
       const updateData = {
-        currentState: data.currentState,
-        moves: data.moves,
-        hints: data.hints,
-        timeSpent: data.timeSpent,
-        isCompleted: data.isCompleted || false,
-        completedAt: data.isCompleted ? now : existing?.completedAt ?? null,
+        ...existing,
+        ...data,
         lastSavedAt: now,
         updatedAt: now,
       }

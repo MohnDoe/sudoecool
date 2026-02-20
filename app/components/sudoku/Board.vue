@@ -2,7 +2,7 @@
 import "~/assets/css/sudoku.css";
 
 const { toggleNotesMode, selectCell, unselectCell, insertNumber, clearCell } = useGameStore();
-const { selectedIndex, grid } = storeToRefs(useGameStore())
+const { selectedIndex, grid, isPaused, isCompleted } = storeToRefs(useGameStore())
 
 const relativeMove = (arrow: string) => {
   if (selectedIndex.value == null) return;
@@ -31,6 +31,8 @@ const relativeMove = (arrow: string) => {
 }
 
 const onKeyDown = (e: KeyboardEvent) => {
+  if (isPaused.value || isCompleted.value) return;
+
   if (e.key === 'e') {
     toggleNotesMode();
     e.preventDefault();

@@ -4,7 +4,7 @@ const { cell, index } = defineProps<{
   index: number
 }>()
 const gameStore = useGameStore();
-const { cellConflicts, selectedIndex, selectedCell, isPaused } = storeToRefs(gameStore)
+const { cellConflicts, selectedIndex, selectedCell, isPaused, isCompleted } = storeToRefs(gameStore)
 
 
 const isSelected = computed(() => selectedIndex.value == index)
@@ -41,7 +41,7 @@ const cellClasses = computed(() => ({
   "sudoku-cell--selected": isSelected.value,
   "sudoku-cell--same": isSameNumber.value,
   "sudoku-cell--error": hasError.value,
-  "sudoku-cell--hidden": isPaused.value
+  "sudoku-cell--hidden": isPaused.value && !isCompleted.value
 }))
 </script>
 

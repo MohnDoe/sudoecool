@@ -1,6 +1,6 @@
-import { z } from "zod/v4"
 import { GameService } from "#server/services/game.service";
 import { checkPuzzleAgainstSolution } from "#shared/utils/sudoku";
+import { z } from "zod/v4";
 
 const bodySchema = z.object({
   puzzleId: z.string(),
@@ -9,9 +9,8 @@ const bodySchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const session = await requireDiscordAuth(event);
-  const usedId = session.user!.id;
+  const userId = session.user!.id;
 
-  // TODO: add completion mark on progress etc
   const body = await readValidatedBody(event, bodySchema.safeParse);
 
   if (!body.success) {
@@ -23,12 +22,27 @@ export default defineEventHandler(async (event) => {
   const puzzle = await GameService.getPuzzle(puzzleId);
 
   if (!puzzle) {
-    return createError({ status: 404, message: 'This Sudoku does not exist !' });
+    throw createError({ statusCode: 404, message: 'This Sudoku does not exist !' });
   }
 
   const verified = checkPuzzleAgainstSolution(board, puzzle.solution);
 
-  return {
-    verified,
+  if (verified) {
+    try {
+      const finalProgress = await GameService.completePuzzle(userId, puzzleId);
+      return {
+        verified: true,
+        stats: finalProgress
+      }
+    } catch (error) {
+      throw createError({ statusCode: 500, message: "Could not mark this as complete" })
+    }
+  } else {
+    return {
+      verified: false,
+      stats: null
+    }
   }
+
+
 })

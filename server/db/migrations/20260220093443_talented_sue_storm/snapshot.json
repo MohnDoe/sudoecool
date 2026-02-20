@@ -1,0 +1,427 @@
+{
+  "version": "8",
+  "dialect": "postgres",
+  "id": "f6ae1b7c-2218-4458-8680-0b83f8460e70",
+  "prevIds": [
+    "54bcec79-4bd4-4a6c-999b-52a3f97fa1ec"
+  ],
+  "ddl": [
+    {
+      "isRlsEnabled": false,
+      "name": "daily_puzzles",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "game_progress",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "users",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "date",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "varchar(81)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "puzzle",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "varchar(81)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "solution",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "difficulty",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "seed",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "puzzle_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "current_state",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "moves",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "notes",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "hints",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "mistakes",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "time_spent",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "false",
+      "generated": null,
+      "identity": null,
+      "name": "is_completed",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "completed_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "last_saved_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "discord_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "game_progress_user_id_users_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "puzzle_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "daily_puzzles",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "game_progress_puzzle_id_daily_puzzles_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "game_progress"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "daily_puzzles_pkey",
+      "schema": "public",
+      "table": "daily_puzzles",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "game_progress_pkey",
+      "schema": "public",
+      "table": "game_progress",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "users_pkey",
+      "schema": "public",
+      "table": "users",
+      "entityType": "pks"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "date"
+      ],
+      "nullsNotDistinct": false,
+      "name": "daily_puzzles_date_key",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "daily_puzzles"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "discord_id"
+      ],
+      "nullsNotDistinct": false,
+      "name": "users_discord_id_key",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "users"
+    }
+  ],
+  "renames": []
+}
