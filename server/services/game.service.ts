@@ -3,7 +3,7 @@ import { generateRandomSudoku } from "#shared/utils/sudoku";
 import db from "#server/db";
 import * as schema from "#server/db/schema";
 
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 
 
@@ -13,14 +13,10 @@ export class GameService {
       const today = new Date().toISOString().split('T')[0]!; // YYYY-MM-DD
 
       // Check if puzzle exists for today
-      let puzzle = await db
-        .select()
-        .from(schema.dailyPuzzles)
-        .where(eq(schema.dailyPuzzles.date, today))
-        .limit(1);
+      let puzzle = await this.getPuzzleByDate(today);
 
       // If no puzzle for today, generate one
-      if (puzzle.length === 0) {
+      if (!puzzle) {
         const seed = `${today}-${difficulty}`;
         const generated = generateRandomSudoku(difficulty);
 
@@ -42,10 +38,23 @@ export class GameService {
         return result[0]!;
       }
 
-      return puzzle[0]!;
+      return puzzle!;
+
     } catch (error) {
-      throw new Error(`Failed to get today's puzzle: ${error}`);
+      console.error(error);
+      throw new Error(`Failed to get today's puzzle`);
     }
+  }
+
+  static async getPuzzleByDate(date: string) {
+    console.log("getPuzzleByDate", date)
+    const result = await db
+      .select()
+      .from(schema.dailyPuzzles)
+      .where(eq(schema.dailyPuzzles.date, date))
+      .limit(1);
+
+    return result.length > 0 ? result[0] : null;
   }
 
   static async getPuzzle(puzzleId: string) {
@@ -142,5 +151,65 @@ export class GameService {
       console.log(error);
       throw new Error(`Failed to save progress: ${error}`);
     }
+  }
+
+  static async getLeaderboard(type: "global" | "server", date: string, orderBy: "speed" | "moves" | "mistakes", userId?: string, guildId?: string) {
+    const puzzle = await this.getPuzzleByDate(date);
+
+    if (!puzzle) return;
+
+    let order;
+
+    switch (orderBy) {
+      case "speed":
+      default:
+        order = asc(schema.gameProgress.timeSpent)
+        break;
+      case "moves":
+        order = asc(schema.gameProgress.moves)
+        break;
+      case "mistakes":
+        order = asc(schema.gameProgress.mistakes)
+    }
+
+    // FIX: global returns nothing
+    let dbReq = db
+      .select({
+        timeSpent: schema.gameProgress.timeSpent,
+        moves: schema.gameProgress.moves,
+        mistakes: schema.gameProgress.mistakes,
+        user: {
+          id: schema.users.id,
+          username: type == 'server' ? schema.userGuildMemberships.discordUsername : schema.users.discordUsername
+        }
+      })
+      .from(schema.gameProgress)
+      .innerJoin(schema.dailyPuzzles, eq(schema.dailyPuzzles.id, schema.gameProgress.puzzleId))
+      .innerJoin(schema.users, eq(schema.users.id, schema.gameProgress.userId))
+      .where(and(
+        eq(schema.dailyPuzzles.date, date),
+        eq(schema.gameProgress.isCompleted, true)
+      ))
+      .$dynamic()
+
+    if (type === 'server' && guildId && userId) {
+      dbReq = dbReq
+        .innerJoin(schema.userGuildMemberships, and(
+          eq(schema.userGuildMemberships.userId, userId),
+          eq(schema.userGuildMemberships.guildId, guildId)
+        ))
+
+    }
+
+    if (order) {
+      dbReq = dbReq.orderBy(order)
+    }
+
+    dbReq = dbReq.limit(100);
+
+    const reqResult = await dbReq
+
+
+    return reqResult;
   }
 }

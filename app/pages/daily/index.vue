@@ -9,6 +9,12 @@ useGameSync();
 // Load game on mount
 onMounted(async () => {
   await initDaily()
+
+  await useFetch("/api/leaderboard/daily/global", {
+    query: {
+      date: "2026-02-21"
+    }
+  })
 })
 
 </script>
