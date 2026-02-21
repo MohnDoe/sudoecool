@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     public: {
       discordClientId: process.env.NUXT_PUBLIC_DISCORD_CLIENT_ID,
       devMode: process.env.NUXT_PUBLIC_DEV_MODE,
-      discordScope: ['identify', 'guilds.members.read'],
     },
     session: {
       maxAge: 60 * 60 * 4,

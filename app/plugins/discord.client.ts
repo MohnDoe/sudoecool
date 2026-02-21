@@ -29,7 +29,7 @@ export default defineNuxtPlugin(async () => {
         response_type: 'code',
         state: '',
         prompt: 'none',
-        scope: config.public.discordScope as DiscordSDKTypes.OAuthScopes[]
+        scope: ['identify', 'guilds.members.read', 'guilds', 'rpc.activities.write', 'applications.commands']
       })
 
       console.log('✅ Got auth code from Discord')
