@@ -3,10 +3,12 @@ import type { DiscordAPIToken } from "~~/server/services/auth/discord/discord.au
 declare module '#auth-utils' {
   interface User {
     id: string;
-    discordId: string;
-    username: string;
-    globalName: string | null;
-    discriminator: string
+    discord: {
+      id: string;
+      username: string;
+      globalName: string | null;
+      discriminator: string
+    }
   }
 
   interface UserSession {

@@ -1,5 +1,6 @@
-import { type DiscordAPIToken, type DiscordAPIUser, exchangeCodeForToken, fetchDiscordUser } from "~~/server/services/auth/discord/discord.auth.service";
+import { exchangeCodeForToken, fetchDiscordUser } from "~~/server/services/auth/discord/discord.auth.service";
 import { UserService } from "~~/server/services/user.service";
+import { DiscordAPIToken, DiscordAPIUser } from "~~/shared/types/discord";
 
 export default defineEventHandler({
   onRequest: [],
@@ -43,22 +44,18 @@ export default defineEventHandler({
       }
 
       // Sync/create user in database
-      const user = await UserService.syncUser({
-        discordId: discordUser.id,
-        avatar: discordUser.avatar
-          ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
-          : null,
-        username: discordUser.username
-      });
+      const user = await UserService.syncDiscordUser(discordUser);
 
 
       await setUserSession(event, {
         user: {
           id: user.id,
-          discordId: user.discordId,
-          globalName: discordUser.global_name,
-          username: discordUser.username,
-          discriminator: discordUser.discriminator
+          discord: {
+            id: user.discordId,
+            globalName: discordUser.global_name,
+            username: discordUser.username,
+            discriminator: discordUser.discriminator
+          }
         },
         secure: {
           discordAccessToken: tokenData.access_token,

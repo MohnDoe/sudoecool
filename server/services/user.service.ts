@@ -1,38 +1,31 @@
 import 'dotenv/config';
-import { eq } from "drizzle-orm";
-import { v4 as uuid } from "uuid";
 
 import db from "#server/db";
 import * as schema from "#server/db/schema";
+import { DiscordAPIUser } from '~~/shared/types/discord';
 
 
 export class UserService {
-  static async syncUser(user: Omit<DiscordAuth['user'], 'userId'>): Promise<typeof schema.users.$inferSelect> {
-    console.log("UserService sync")
-    const existing = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.discordId, user.discordId))
-      .limit(1);
-
-    if (existing.length > 0) {
-      console.log("User already exists;")
-      return existing[0]!
-    }
-
-    console.log("User does not exist yet.")
-    const newUser = await db
+  static async syncDiscordUser(user: DiscordAPIUser): Promise<typeof schema.users.$inferSelect> {
+    const result = await db
       .insert(schema.users)
       .values({
-        discordId: user.discordId,
-        id: uuid(),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        discordDiscriminator: user.discriminator,
+        discordGlobalUsername: user.global_name,
+        discordId: user.id,
+        discordUsername: user.username,
+      })
+      .onConflictDoUpdate({
+        target: [schema.users.discordId],
+        set: {
+          discordDiscriminator: user.discriminator,
+          discordGlobalUsername: user.global_name,
+          discordUsername: user.username,
+        }
       })
       .returning()
 
-    console.log(`User ${newUser[0]!.id} created`)
 
-    return newUser[0]!;
+    return result[0]!;
   }
 }

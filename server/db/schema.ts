@@ -26,15 +26,19 @@ export const gameProgress = pgTable("game_progress", {
   timeSpent: integer("time_spent").default(0).notNull(),
   isCompleted: boolean("is_completed").default(false).notNull(),
   completedAt: timestamp("completed_at"),
-  lastSavedAt: timestamp("last_saved_at").default(sql`now()`),
-  updatedAt: timestamp("updated_at").default(sql`now()`),
+  lastSavedAt: timestamp("last_saved_at").defaultNow().$onUpdate(() => new Date()),
+  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
 });
 
 
 export const users = pgTable("users", {
   id: uuid().defaultRandom().primaryKey(),
   discordId: text("discord_id").notNull(),
-  createdAt: timestamp("created_at").default(sql`now()`),
-  updatedAt: timestamp("updated_at").default(sql`now()`),
+  discordUsername: text("discord_username").notNull(),
+  discordDiscriminator: text("discord_discriminator").notNull(),
+  discordGlobalUsername: text("discord_global_username"),
+  createdAt: timestamp("created_at").defaultNow(),
+  lastSeenAt: timestamp("lastseen_at").defaultNow().$onUpdate(() => new Date()),
+  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
 }, (table) => [
   unique("users_discord_id_key").on(table.discordId),]);
