@@ -157,6 +157,7 @@ export const useGameStore = defineStore('gameStore', {
         this.loadGame({
           puzzle: data.value.daily.puzzle,
           puzzleId: data.value.daily.id,
+          puzzleDate: data.value.daily.date,
           progress: data.value.progress as GameProgress
         })
       }
@@ -197,9 +198,10 @@ export const useGameStore = defineStore('gameStore', {
         this.selectedIndex = null;
       }
     },
-    loadGame({ puzzle, puzzleId, progress }: { puzzle: string, puzzleId: string, progress?: GameProgress }) {
+    loadGame({ puzzle, puzzleId, puzzleDate, progress }: { puzzle: string, puzzleId: string, puzzleDate: string, progress?: GameProgress }) {
       this.puzzle = puzzle;
-      this.puzzleId = puzzleId
+      this.puzzleId = puzzleId;
+      this.puzzleDate = puzzleDate;
       this.grid = parsePuzzle(this.puzzle);
 
       this.hints = 0
