@@ -22,7 +22,8 @@ export default defineEventHandler({
     }
 
     try {
-      const { code, channelId, guildId } = body.data;
+      const { code, } = body.data;
+      let { channelId, guildId } = body.data;
 
       let tokenData: DiscordAPIToken;
       let discordUser: DiscordAPIUser;
@@ -46,11 +47,15 @@ export default defineEventHandler({
           token_type: ''
         }
 
+
+        guildId = 'discord_mock_guild_id';
+
         guildMember = {
           user: {
             discriminator: "0001",
             id: "discord_member_mock_id",
             username: "discord_member_mock_username",
+            global_name: "discord_member_mock_global_username",
             avatar_decoration_data: null,
             bot: false,
           },
