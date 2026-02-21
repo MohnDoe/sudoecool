@@ -14,7 +14,7 @@ const elevationClasses = ['elevated--xs'];
 
 <template>
   <div class="flex flex-col gap-4">
-    <USwitch size="xs" label="Fast mode" />
+    <!-- <USwitch size="xs" label="Fast mode" /> -->
     <div class="flex gap-2">
       <UButton size="xl" variant="elevated" color="neutral" class="grow relative bg-white" :class="elevationClasses"
         @click="toggleNotesMode">

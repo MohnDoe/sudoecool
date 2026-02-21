@@ -3,7 +3,7 @@ const gameStore = useGameStore();
 
 </script>
 <template>
-  <div class="flex flex-row ww-full gap-4 items-center p-4">
+  <div class="flex flex-row w-full gap-4 items-center p-4">
     <div class="flex flex-row grow justify-between">
       <div class="flex flex-col">
         <span>Time</span>

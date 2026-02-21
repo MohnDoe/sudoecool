@@ -1,7 +1,7 @@
 <template>
   <UApp>
     <!-- <AppHeader /> -->
-    <UContainer>
+    <UContainer class="h-screen">
       <slot />
     </UContainer>
   </UApp>

@@ -91,15 +91,17 @@ const subgrids = computed(() => {
 
 </script>
 <template>
-  <div className="sudoku-board w-full p-1">
-    <div className="
-        sudoku-grid
-        w-full aspect-square
-        " tabIndex="0" @keydown="onKeyDown">
-      <div v-for="(box, b) in subgrids" :key="b" class="sudoku-subgrid">
-        <SudokuCell v-for="{ cell, index } in box" :index="index" :key="index" :cell="cell"
-          @click="toggleSelectCell(index)" />
-      </div>
+  <div className="
+    sudoku-grid
+    md:h-full
+    md:w-full
+    md:max-h-fit
+    md:max-w-fit
+    aspect-square
+  " tabIndex="0" @keydown="onKeyDown">
+    <div v-for="(box, b) in subgrids" :key="b" class="sudoku-subgrid">
+      <SudokuCell v-for="{ cell, index } in box" :index="index" :key="index" :cell="cell"
+        @click="toggleSelectCell(index)" />
     </div>
   </div>
 </template>
@@ -112,8 +114,6 @@ const subgrids = computed(() => {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: var(--region-gap);
-  width: 100%;
-  aspect-ratio: 1 / 1;
   border-collapse: collapse;
   /* border: var(--grid-border-thickness) solid var(--grid-border-color); */
   background-color: var(--grid-background-color);
